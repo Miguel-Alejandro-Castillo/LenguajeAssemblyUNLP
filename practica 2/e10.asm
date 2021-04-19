@@ -1,0 +1,40 @@
+;Registros del PIC
+EOI EQU 20H
+IMR EQU 21H
+IRR EQU 22H
+ISR EQU 23H
+INT0 EQU 24H
+INT1 EQU 25H
+INT2 EQU 26H
+INT3 EQU 27H
+
+;Valores especiales
+MASCARA_F10 EQU 11111110B ; En hexadecimal 0FEH
+VALOR_FIN_INTERRUPCION EQU 20H
+
+;Vector de Interrupciones
+ID_F10 EQU 10 ; Elegido  de forma arbitraria
+
+ORG 40; El valor de ID_F10  multiplicado por 4
+DW RUTINA_INTERRUPCION_F10; No es necesario ponerle una etiqueta
+
+ORG 3000H
+RUTINA_INTERRUPCION_F10: PUSH AX
+INC DX
+MOV AL, VALOR_FIN_INTERRUPCION
+OUT EOI, AL
+POP AX
+IRET
+
+ORG 2000H
+CLI
+MOV AL, MASCARA_F10
+OUT IMR, AL
+MOV AL, ID_F10
+OUT INT0, AL
+MOV DX, 0
+STI
+LOOP_INFINITO: JMP LOOP_INFINITO
+INT 0 ; Codigo inalcanzable ajjajajajajjajajajajaja
+END
+
